@@ -8,4 +8,4 @@ trap "killall background" EXIT
 ./bin/server 50546 &
 sleep 1
 
-./bin/client 50543 50544 50545 50546
+./bin/client_async 50543 50544 50545 50546

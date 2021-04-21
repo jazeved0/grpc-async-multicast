@@ -20,12 +20,15 @@ vpath %.cpp ./src
 .PHONY: all clean format
 .SECONDARY:
 
-all: $(BINDIR)/client $(BINDIR)/server
+all: $(BINDIR)/client_async $(BINDIR)/client_sync $(BINDIR)/server
 
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-$(BINDIR)/client: $(GENDIR)/demo.pb.o $(GENDIR)/demo.grpc.pb.o $(OBJDIR)/client.o
+$(BINDIR)/client_async: $(GENDIR)/demo.pb.o $(GENDIR)/demo.grpc.pb.o $(OBJDIR)/client_async.o
+	$(CXX) $^ $(LDFLAGS) -o $@
+
+$(BINDIR)/client_sync: $(GENDIR)/demo.pb.o $(GENDIR)/demo.grpc.pb.o $(OBJDIR)/client_sync.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 $(BINDIR)/server: $(GENDIR)/demo.pb.o $(GENDIR)/demo.grpc.pb.o $(OBJDIR)/server.o
@@ -38,7 +41,7 @@ $(GENDIR)/%.pb.cc: $(PROTODIR)/%.proto
 	$(PROTOC) -I $(PROTODIR) --cpp_out=$(GENDIR) $<
 
 clean:
-	rm -f $(OBJDIR)/*.o $(BINDIR)/client $(BINDIR)/server $(GENDIR)/*.pb.*
+	rm -f $(OBJDIR)/*.o $(BINDIR)/client_async $(BINDIR)/client_sync $(BINDIR)/server $(GENDIR)/*.pb.*
 
 format:
 	clang-format -i -style=LLVM *.cpp

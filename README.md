@@ -9,7 +9,7 @@ Async multicast code is based on: https://groups.google.com/g/grpc-io/c/4MVVoSb0
 ```
 $ make
 ...
-$ ./run.sh
+$ ./run_async.sh
 Server listening on 0.0.0.0:50544
 Server listening on 0.0.0.0:50543
 Server listening on 0.0.0.0:50546
@@ -38,7 +38,7 @@ Server at 0.0.0.0:50545 failed to respond after 1001ms
 
 **The multicast ping starts exceeding its deadline after 1-2 rounds even though the servers are all local.**
 
-When increasing the deadline (by manually increasing `DEADLINE_SEC` in `client.cpp` to 100), the actual time to respond varies, though it seems to cap out at 4 seconds:
+When increasing the deadline (by manually increasing `DEADLINE_SEC` in `client_async.cpp` to 100), the actual time to respond varies, though it seems to cap out at 4 seconds:
 
 ```
 Server listening on 0.0.0.0:50545
@@ -65,4 +65,36 @@ Server at 0.0.0.0:50543 responded in 0ms
 Server at 0.0.0.0:50544 responded in 0ms
 Server at 0.0.0.0:50545 responded in 3997ms
 Server at 0.0.0.0:50546 responded in 3997ms
+```
+
+### Sync Client (Workuing)
+
+Performing the multi-cast in series seems to work as expected where all responses come back in a reasonable time:
+
+```
+$ ./run_sync.sh
+Server listening on 0.0.0.0:50544
+Server listening on 0.0.0.0:50543
+Server listening on 0.0.0.0:50545
+Server listening on 0.0.0.0:50546
+Starting ping multicast
+Server at 0.0.0.0:50543 responded in 2ms
+Server at 0.0.0.0:50544 responded in 3ms
+Server at 0.0.0.0:50545 responded in 5ms
+Server at 0.0.0.0:50546 responded in 6ms
+Starting ping multicast
+Server at 0.0.0.0:50543 responded in 0ms
+Server at 0.0.0.0:50544 responded in 1ms
+Server at 0.0.0.0:50545 responded in 2ms
+Server at 0.0.0.0:50546 responded in 2ms
+Starting ping multicast
+Server at 0.0.0.0:50543 responded in 0ms
+Server at 0.0.0.0:50544 responded in 1ms
+Server at 0.0.0.0:50545 responded in 1ms
+Server at 0.0.0.0:50546 responded in 2ms
+Starting ping multicast
+Server at 0.0.0.0:50543 responded in 0ms
+Server at 0.0.0.0:50544 responded in 1ms
+Server at 0.0.0.0:50545 responded in 1ms
+Server at 0.0.0.0:50546 responded in 2ms
 ```
