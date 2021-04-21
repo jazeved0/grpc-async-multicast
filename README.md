@@ -67,7 +67,7 @@ Server at 0.0.0.0:50545 responded in 3997ms
 Server at 0.0.0.0:50546 responded in 3997ms
 ```
 
-### Sync Client (Workuing)
+### Sync Client (Working)
 
 Performing the multi-cast in series seems to work as expected where all responses come back in a reasonable time:
 
