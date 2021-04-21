@@ -7,6 +7,8 @@
 #include <grpcpp/create_channel.h>
 #include <grpcpp/security/credentials.h>
 
+#define DEADLINE_SEC 1
+
 int main(int argc, char **argv) {
   // Collect each server port as CLI arguments
   std::vector<std::string> ports;
@@ -42,7 +44,7 @@ int main(int argc, char **argv) {
 
       // Configure the deadline
       auto deadline_time =
-          std::chrono::system_clock::now() + std::chrono::seconds(1);
+          std::chrono::system_clock::now() + std::chrono::seconds(DEADLINE_SEC);
       context->set_deadline(deadline_time);
 
       // Get a connection to the node and make the RPC call
@@ -66,10 +68,10 @@ int main(int argc, char **argv) {
           std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
               .count();
       if (ok && statuses[tag]->ok()) {
-        std::cout << "Server at 0.0.0.0" << ports[tag] << " responded in "
+        std::cout << "Server at 0.0.0.0:" << ports[tag] << " responded in "
                   << duraton_ms << "ms" << std::endl;
       } else {
-        std::cout << "Server at 0.0.0.0 " << ports[tag]
+        std::cout << "Server at 0.0.0.0:" << ports[tag]
                   << " failed to respond after " << duraton_ms << "ms"
                   << std::endl;
       }
